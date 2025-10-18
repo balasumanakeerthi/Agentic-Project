@@ -13,15 +13,14 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 # This function creates and configures the AI model
 def get_llm():
     if not GOOGLE_API_KEY:
-        # IMPROVEMENT: Made the error message more general for deployment
         st.error("🚨 GOOGLE_API_KEY not found. Please set it as an environment variable.")
         st.stop()
         
     return ChatGoogleGenerativeAI(
-        # FIX: Corrected the model name to a valid one
-        model="gemini-1.5-flash-latest", 
+        # FIX: Changed to the widely supported 'gemini-pro' model
+        model="gemini-pro", 
         google_api_key=GOOGLE_API_KEY,
-        temperature=0.4 # A little creativity is good here
+        temperature=0.4
     )
 
 # --- Streamlit UI ---
@@ -81,7 +80,6 @@ if st.button("Get AI-Powered Answer"):
             response = llm.invoke(prompt).content
         
         st.subheader("🔎 AI Response:")
-        # Using st.markdown to ensure rich text formatting is rendered
         st.markdown(response)
     else:
         st.error("Please enter a question.")
