@@ -3,7 +3,9 @@ import streamlit as st
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-# --- Load API Key from .env file ---
+# --- Load API Key ---
+# This will load from a .env file for local development.
+# On Render, you'll set this as a secret Environment Variable.
 load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
@@ -11,20 +13,27 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 # This function creates and configures the AI model
 def get_llm():
     if not GOOGLE_API_KEY:
-        st.error("🚨 GOOGLE_API_KEY not found in .env file. Please create the file and add your key.")
+        # IMPROVEMENT: Made the error message more general for deployment
+        st.error("🚨 GOOGLE_API_KEY not found. Please set it as an environment variable.")
         st.stop()
+        
     return ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash", # Fast and capable model
+        # FIX: Corrected the model name to a valid one
+        model="gemini-1.5-flash-latest", 
         google_api_key=GOOGLE_API_KEY,
         temperature=0.4 # A little creativity is good here
     )
 
 # --- Streamlit UI ---
+st.set_page_config(page_title="Universal Academic & Career AI", page_icon="🎓")
 st.title("🎓 Universal Academic & Career AI")
 st.write("Ask any question, and the AI will answer from its general knowledge.")
 
 st.sidebar.header("Choose an Agent Persona")
-agent_choice = st.sidebar.radio("I want the AI to act as a:", ["Expert Academic Advisor", "Seasoned Career Counselor"])
+agent_choice = st.sidebar.radio(
+    "I want the AI to act as a:", 
+    ["Expert Academic Advisor", "Seasoned Career Counselor"]
+)
 
 user_query = st.text_input("💡 Enter your question here:")
 
@@ -72,6 +81,7 @@ if st.button("Get AI-Powered Answer"):
             response = llm.invoke(prompt).content
         
         st.subheader("🔎 AI Response:")
-        st.write(response)
+        # Using st.markdown to ensure rich text formatting is rendered
+        st.markdown(response)
     else:
         st.error("Please enter a question.")
