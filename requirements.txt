@@ -1,6 +1,5 @@
 streamlit
-langchain-google-genai>=0.1.0
+langchain
+langchain-google-genai
 python-dotenv
-reportlab
-
-
+google-generativeai
