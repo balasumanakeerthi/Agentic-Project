@@ -1,5 +1,7 @@
+# Final dependency list
 streamlit
 python-dotenv
 langchain
 langchain-google-genai
 google-generativeai
+
